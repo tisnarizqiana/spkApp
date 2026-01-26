@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
-import "./index.css"; // Ini penting biar Tailwind jalan!
+import "./index.css"; // JANGAN DIHAPUS: Ini nyawa tampilannya
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

@@ -5,27 +5,38 @@ const SkeletonTable = () => {
   const rows = [1, 2, 3, 4, 5];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden animate-pulse">
+    <div className="bg-white dark:bg-darkCard rounded-4xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden animate-pulse">
       {/* Fake Header */}
-      <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-        <div className="h-6 bg-slate-200 rounded w-1/3"></div>
-        <div className="h-8 bg-slate-200 rounded w-24"></div>
+      <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+        <div className="space-y-2">
+            <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded-full w-48"></div>
+            <div className="h-4 bg-slate-100 dark:bg-slate-800/50 rounded-full w-32"></div>
+        </div>
+        <div className="h-10 bg-slate-200 dark:bg-slate-800 rounded-full w-32"></div>
       </div>
 
       {/* Fake Table Body */}
-      <div className="p-4">
+      <div className="p-0">
         {rows.map((row) => (
-          <div key={row} className="flex items-center space-x-4 mb-4 p-2">
+          <div key={row} className="flex items-center gap-6 p-6 border-b border-slate-50 dark:border-slate-800/50 last:border-none">
             {/* Rank Circle */}
-            <div className="rounded-full bg-slate-200 h-10 w-10"></div>
-            <div className="flex-1 space-y-2 py-1">
-              {/* Name Bar */}
-              <div className="h-4 bg-slate-200 rounded w-3/4"></div>
-              {/* Subtitle Bar */}
-              <div className="h-4 bg-slate-200 rounded w-1/2"></div>
+            <div className="shrink-0 rounded-2xl bg-slate-200 dark:bg-slate-800 h-10 w-10"></div>
+            
+            {/* Profile + Name */}
+            <div className="flex items-center gap-4 flex-1">
+                 <div className="rounded-full bg-slate-200 dark:bg-slate-800 h-10 w-10"></div>
+                 <div className="space-y-2 flex-1">
+                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-full w-1/3"></div>
+                    <div className="h-3 bg-slate-100 dark:bg-slate-800/50 rounded-full w-1/4"></div>
+                 </div>
             </div>
+
+            {/* Metrics (Hidden on Mobile) */}
+            <div className="hidden md:block h-4 bg-slate-100 dark:bg-slate-800/50 rounded-full w-16"></div>
+            <div className="hidden md:block h-4 bg-slate-100 dark:bg-slate-800/50 rounded-full w-16"></div>
+
             {/* Score Box */}
-            <div className="h-8 bg-slate-200 rounded w-16"></div>
+            <div className="h-12 bg-slate-200 dark:bg-slate-800 rounded-xl w-16"></div>
           </div>
         ))}
       </div>

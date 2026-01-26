@@ -1,4 +1,5 @@
 import React from "react";
+import { Users, Heart, Globe, Crown } from "lucide-react";
 
 const StatsWidgets = ({ stats, loading }) => {
   // Helper Format Angka
@@ -14,40 +15,48 @@ const StatsWidgets = ({ stats, loading }) => {
     {
       title: "Total Database",
       value: stats?.total || 0,
-      icon: "👥",
-      color: "bg-blue-50 text-blue-600 border-blue-100",
+      icon: <Users size={24} />,
+      // Warna Gradient Blue
+      bgClass: "bg-gradient-to-br from-blue-500 to-indigo-600",
+      shadowClass: "shadow-blue-500/30",
       desc: "Influencer terdaftar",
     },
     {
       title: "Avg. Engagement",
       value: stats?.avg_eng ? (stats.avg_eng * 100).toFixed(2) + "%" : "0%",
-      icon: "❤️",
-      color: "bg-pink-50 text-pink-600 border-pink-100",
+      icon: <Heart size={24} />,
+      // Warna Gradient Pink/Rose
+      bgClass: "bg-gradient-to-br from-rose-400 to-pink-600",
+      shadowClass: "shadow-pink-500/30",
       desc: "Rata-rata interaksi",
     },
     {
       title: "Dominasi Negara",
       value: stats?.top_country || "-",
-      icon: "🌍",
-      color: "bg-green-50 text-green-600 border-green-100",
+      icon: <Globe size={24} />,
+      // Warna Gradient Emerald/Teal
+      bgClass: "bg-gradient-to-br from-emerald-400 to-teal-600",
+      shadowClass: "shadow-emerald-500/30",
       desc: "Negara terbanyak",
     },
     {
       title: "Highest Reach",
       value: formatNumber(stats?.max_follower),
-      icon: "👑",
-      color: "bg-purple-50 text-purple-600 border-purple-100",
+      icon: <Crown size={24} />,
+      // Warna Gradient Amber/Orange
+      bgClass: "bg-gradient-to-br from-amber-400 to-orange-600",
+      shadowClass: "shadow-orange-500/30",
       desc: "Followers tertinggi",
     },
   ];
 
   if (loading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
-            className="h-28 bg-slate-200 rounded-xl animate-pulse"
+            className="h-36 bg-slate-200 dark:bg-slate-800 rounded-3xl animate-pulse"
           ></div>
         ))}
       </div>
@@ -55,29 +64,30 @@ const StatsWidgets = ({ stats, loading }) => {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 animate-fade-in-down">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
       {widgets.map((w, idx) => (
         <div
           key={idx}
-          className={`p-4 rounded-xl border shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow bg-white ${w.color.replace(
-            "bg-",
-            "hover:bg-opacity-80 "
-          )}`}
+          className="bg-white dark:bg-darkCard p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
         >
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider opacity-70 mb-1">
-                {w.title}
-              </p>
-              <h3 className="text-2xl font-extrabold text-slate-800">
-                {w.value}
-              </h3>
-            </div>
-            <div className={`p-2 rounded-lg ${w.color} bg-opacity-20`}>
-              <span className="text-xl">{w.icon}</span>
+          <div className="flex items-start justify-between mb-4">
+            {/* Icon Container dengan Gradient & Shadow */}
+            <div className={`p-3.5 rounded-2xl text-white shadow-lg ${w.bgClass} ${w.shadowClass} group-hover:scale-110 transition-transform`}>
+              {w.icon}
             </div>
           </div>
-          <p className="text-xs text-slate-500 mt-2">{w.desc}</p>
+          
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">
+              {w.title}
+            </p>
+            <h3 className="text-2xl font-black text-slate-800 dark:text-white truncate">
+              {w.value}
+            </h3>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 font-medium">
+              {w.desc}
+            </p>
+          </div>
         </div>
       ))}
     </div>

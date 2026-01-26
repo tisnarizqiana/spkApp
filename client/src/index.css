@@ -1,8 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-color: #f8fafc; /* Slate-50 */
-  color: #1e293b; /* Slate-800 */
+@layer base {
+  /* Hapus outline default browser yang jelek */
+  *:focus {
+    outline: none !important;
+  }
+
+  /* Kontrol Background Utama Disini agar SOLID */
+  body {
+    @apply font-sans antialiased transition-colors duration-300;
+    /* Light Mode: Abu-abu sangat muda (bersih) */
+    @apply bg-[#F8FAFC] text-slate-900; 
+  }
+
+  /* Dark Mode: Langsung override di body */
+  .dark body {
+    /* Dark Mode: Navy Gelap Pekat (Kontras Tinggi) */
+    @apply bg-[#020617] text-slate-100; 
+  }
+}
+
+/* Custom Scrollbar agar rapi */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-700 rounded-full;
 }

@@ -1,158 +1,144 @@
 import React from "react";
+import { 
+  X, 
+  MapPin, 
+  Instagram, 
+  Video, // Icon pengganti TikTok (karena Lucide belum punya logo TikTok native yang sempurna, Video works well)
+  Users, 
+  Heart, 
+  Image as ImageIcon, 
+  Activity, 
+  Lightbulb, 
+  Trophy 
+} from "lucide-react";
 
 const ProfileModal = ({ isOpen, onClose, data }) => {
   if (!isOpen || !data) return null;
 
   // Helper: Buka Link Sosmed
   const openSocial = (platform) => {
-    // Bersihkan username dari karakter aneh
     const username = data.channel_info.replace(/[^a-zA-Z0-9_.]/g, "");
     let url = "";
-
     if (platform === "instagram") url = `https://www.instagram.com/${username}`;
     if (platform === "tiktok") url = `https://www.tiktok.com/@${username}`;
-
     window.open(url, "_blank");
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4 animate-fade-in">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all scale-100">
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4 animate-fade-in">
+      <div className="bg-white dark:bg-darkCard rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all scale-100 border border-slate-200 dark:border-slate-700">
+        
         {/* HEADER: Gradient Background */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 h-32 relative">
+        <div className="bg-gradient-to-r from-brand-600 to-indigo-600 h-36 relative">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 transition-all"
+            className="absolute top-4 right-4 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 transition-all backdrop-blur-md"
           >
-            ✕
+            <X size={20} />
           </button>
+          
+          {/* Decorative Pattern */}
+          <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
         </div>
 
         {/* BODY: Profile Info */}
         <div className="px-8 pb-8 relative">
           {/* Avatar (Inisial) */}
-          <div className="-mt-16 mb-6">
-            <div className="w-32 h-32 bg-white rounded-full p-2 shadow-lg mx-auto md:mx-0">
-              <div className="w-full h-full bg-slate-100 rounded-full flex items-center justify-center text-4xl font-bold text-slate-400 uppercase">
+          <div className="-mt-16 mb-6 flex justify-between items-end">
+            <div className="w-32 h-32 bg-white dark:bg-darkCard rounded-full p-2 shadow-xl">
+              <div className="w-full h-full bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-4xl font-black text-slate-400 dark:text-slate-500 uppercase border border-slate-200 dark:border-slate-700">
                 {data.channel_info.substring(0, 2)}
               </div>
+            </div>
+
+            {/* Score Badge (Mobile/Desktop Layout) */}
+            <div className="hidden sm:block text-right">
+               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Final Score</span>
+               <div className="text-5xl font-black text-brand-600 dark:text-brand-400 leading-none mt-1">
+                 {data.calculation.final_score}
+               </div>
             </div>
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-start gap-6">
             {/* Kiri: Identitas */}
-            <div>
-              <h2 className="text-3xl font-bold text-slate-800 mb-1">
-                @{data.channel_info}
-              </h2>
-              <div className="flex items-center gap-2 text-slate-500 text-sm mb-4">
-                <span>📍 {data.country || "Global"}</span>
-                <span>•</span>
-                <span>Rank #{data.rank || "-"}</span>
+            <div className="w-full">
+              <div className="flex items-center gap-2 mb-1">
+                <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                  @{data.channel_info}
+                </h2>
+                {data.rank <= 3 && <Trophy size={20} className="text-yellow-500 fill-yellow-500" />}
+              </div>
+              
+              <div className="flex items-center gap-3 text-slate-500 dark:text-slate-400 text-sm mb-6 font-medium">
+                <span className="flex items-center gap-1"><MapPin size={14} /> {data.country || "Global"}</span>
+                <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
+                <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-xs font-bold border border-slate-200 dark:border-slate-700">
+                  Rank #{data.rank || "-"}
+                </span>
               </div>
 
               {/* Tombol Sosmed */}
-              <div className="flex gap-3">
+              <div className="flex gap-3 mb-8">
                 <button
                   onClick={() => openSocial("instagram")}
-                  className="flex items-center gap-2 px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg text-sm font-bold transition-colors"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-pink-500 to-rose-600 hover:to-rose-700 text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-pink-500/30 active:scale-95"
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                  </svg>
-                  Instagram
+                  <Instagram size={16} /> Instagram
                 </button>
                 <button
                   onClick={() => openSocial("tiktok")}
-                  className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-slate-800 text-white rounded-lg text-sm font-bold transition-colors"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 dark:bg-black hover:bg-slate-800 text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-slate-900/30 dark:shadow-none active:scale-95"
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.03 5.91-.05 8.81-.47 9.91-17.74 11.81-17.74-1.38 0-7.18 10.37-8.18 10.37-8.18V7.2c-2.29.35-4.43 1.48-5.69 3.53-1.73 2.89-.9 7.33 1.95 9.47 3.32 2.49 8.1 1.6 10.27-2.05.52-.87.89-1.83.98-2.84-.15-5.3.1-10.46.03-15.29z" />
-                  </svg>
-                  TikTok
+                  <Video size={16} /> TikTok
                 </button>
               </div>
-            </div>
 
-            {/* Kanan: Skor Besar */}
-            <div className="bg-slate-50 p-6 rounded-xl border border-slate-100 text-center min-w-[150px]">
-              <div className="text-sm font-semibold text-slate-500 uppercase tracking-wide">
-                Final Score
+              {/* Grid Statistik */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <StatBox label="Followers" value={formatNum(data.followers)} icon={<Users size={16} />} />
+                <StatBox label="Engagement" value={`${(data.eng_rate * 100).toFixed(2)}%`} icon={<Activity size={16} />} />
+                <StatBox label="Avg Likes" value={formatNum(data.avg_likes)} icon={<Heart size={16} />} />
+                <StatBox label="Total Posts" value={data.posts} icon={<ImageIcon size={16} />} />
               </div>
-              <div className="text-5xl font-extrabold text-blue-600 my-2">
-                {data.calculation.final_score}
-              </div>
-              <div className="text-xs text-slate-400">Scale 0.0 - 5.0</div>
-            </div>
-          </div>
 
-          {/* Grid Statistik */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-            <div className="p-4 bg-slate-50 rounded-lg">
-              <div className="text-xs text-slate-500 font-bold uppercase">
-                Followers
-              </div>
-              <div className="text-lg font-bold text-slate-800">
-                {data.followers > 1000000
-                  ? (data.followers / 1000000).toFixed(1) + "M"
-                  : data.followers}
-              </div>
-            </div>
-            <div className="p-4 bg-slate-50 rounded-lg">
-              <div className="text-xs text-slate-500 font-bold uppercase">
-                Engagement
-              </div>
-              <div className="text-lg font-bold text-slate-800">
-                {(data.eng_rate * 100).toFixed(2)}%
+              {/* Analisa Cepat */}
+              <div className="mt-8 bg-brand-50 dark:bg-brand-900/10 border border-brand-100 dark:border-brand-500/20 p-5 rounded-2xl flex gap-4">
+                <div className="shrink-0 w-10 h-10 bg-brand-100 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 rounded-full flex items-center justify-center">
+                  <Lightbulb size={20} />
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1 text-sm">AI Insight</h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Influencer ini memiliki skor <strong>Core Factor {data.calculation.NCF}</strong> dan <strong>Secondary Factor {data.calculation.NSF}</strong>.
+                    {data.calculation.NCF > data.calculation.NSF
+                      ? " Sangat direkomendasikan untuk campaign yang butuh interaksi intens (High Engagement)."
+                      : " Pilihan tepat untuk Brand Awareness karena jangkauan audiens yang luas (High Reach)."}
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="p-4 bg-slate-50 rounded-lg">
-              <div className="text-xs text-slate-500 font-bold uppercase">
-                Avg Likes
-              </div>
-              <div className="text-lg font-bold text-slate-800">
-                {data.avg_likes > 1000000
-                  ? (data.avg_likes / 1000000).toFixed(1) + "M"
-                  : (data.avg_likes / 1000).toFixed(1) + "K"}
-              </div>
-            </div>
-            <div className="p-4 bg-slate-50 rounded-lg">
-              <div className="text-xs text-slate-500 font-bold uppercase">
-                Total Posts
-              </div>
-              <div className="text-lg font-bold text-slate-800">
-                {data.posts}
-              </div>
-            </div>
-          </div>
-
-          {/* Analisa Cepat (Mockup Logic) */}
-          <div className="mt-6 border-t border-slate-100 pt-6">
-            <h4 className="font-bold text-slate-800 mb-2">💡 Quick Insight</h4>
-            <p className="text-sm text-slate-600">
-              Influencer ini memiliki skor{" "}
-              <strong>Core Factor (Kualitas) {data.calculation.NCF}</strong> dan{" "}
-              <strong>
-                Secondary Factor (Popularitas) {data.calculation.NSF}
-              </strong>
-              .
-              {data.calculation.NCF > data.calculation.NSF
-                ? " Sangat direkomendasikan untuk campaign yang butuh interaksi tinggi (Engagement)."
-                : " Sangat cocok untuk campaign Awareness (Jangkauan Luas) karena followers masif."}
-            </p>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+// Helper Components & Functions
+const formatNum = (num) => {
+  if (num >= 1000000000) return (num / 1000000000).toFixed(1) + "B";
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+  if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+  return num;
+};
+
+const StatBox = ({ label, value, icon }) => (
+  <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700/50 flex flex-col items-center text-center hover:bg-white dark:hover:bg-slate-800 transition-colors shadow-sm">
+    <div className="text-slate-400 mb-2">{icon}</div>
+    <div className="text-lg font-black text-slate-800 dark:text-white leading-none mb-1">{value}</div>
+    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{label}</div>
+  </div>
+);
 
 export default ProfileModal;
