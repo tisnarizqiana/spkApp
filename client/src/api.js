@@ -1,9 +1,10 @@
 import axios from "axios";
 
-// PENYESUAIAN VERCEL:
-// Gunakan relative path "/api" saat production agar mengikuti domain Vercel.
-// Gunakan localhost:3000 hanya saat development.
-const API_URL = import.meta.env.PROD ? "/api" : "http://localhost:3000/api";
+// UBAH: Export variabel ini agar bisa dipakai di file lain
+// Logic: Jika di Production (Vercel), pakai "/api". Jika tidak, pakai localhost.
+export const API_URL = import.meta.env.PROD
+  ? "/api"
+  : "http://localhost:3000/api";
 
 export const getRecommendations = async (criteria) => {
   try {

@@ -2,16 +2,18 @@ import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { AuthContext } from "../context/AuthContext";
-import { 
-  LayoutDashboard, 
-  Mail, 
-  Lock, 
-  User, 
-  Key, 
-  ArrowRight, 
+// IMPORT API_URL DARI SINI:
+import { API_URL } from "../api";
+import {
+  LayoutDashboard,
+  Mail,
+  Lock,
+  User,
+  Key,
+  ArrowRight,
   Loader2,
   ChevronLeft,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 
 const AuthPage = () => {
@@ -27,14 +29,15 @@ const AuthPage = () => {
     otp: "",
   });
   const [loading, setLoading] = useState(false);
-  
+
   // --- LOGIKA TOMBOL KABUR & VALIDASI ---
-  const [btnPos, setBtnPos] = useState({ x: 0, y: 0 }); 
+  const [btnPos, setBtnPos] = useState({ x: 0, y: 0 });
   const [isFormValid, setIsFormValid] = useState(false);
   const [validationMsg, setValidationMsg] = useState("");
 
   // REGEX PASSWORD: Min 1 Huruf, 1 Angka, 1 Simbol
-  const strongPasswordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/;
+  const strongPasswordRegex =
+    /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/;
 
   // Cek validasi setiap kali input berubah
   useEffect(() => {
@@ -54,14 +57,13 @@ const AuthPage = () => {
       if (!isFilled(email)) {
         msg = "Email wajib diisi!";
       } else if (!isGmail) {
-        msg = "Login wajib pakai akun @gmail.com!"; // <--- Validasi Gmail di Login
+        msg = "Login wajib pakai akun @gmail.com!";
       } else if (!isFilled(password)) {
         msg = "Password belum diisi!";
       } else {
         isValid = true;
       }
-    } 
-    else if (mode === "register") {
+    } else if (mode === "register") {
       // REGISTER: Wajib Gmail + Password Kuat
       if (!isFilled(username)) {
         msg = "Username wajib diisi!";
@@ -76,8 +78,7 @@ const AuthPage = () => {
       } else {
         isValid = true;
       }
-    } 
-    else if (mode === "forgot_request") {
+    } else if (mode === "forgot_request") {
       // LUPA PASS: Wajib Gmail
       if (!isFilled(email)) {
         msg = "Email wajib diisi!";
@@ -86,8 +87,7 @@ const AuthPage = () => {
       } else {
         isValid = true;
       }
-    } 
-    else if (mode === "forgot_verify") {
+    } else if (mode === "forgot_verify") {
       // RESET PASS: Wajib Gmail + Password Baru Kuat + OTP
       if (!isGmail) {
         msg = "Email tidak valid!";
@@ -102,28 +102,25 @@ const AuthPage = () => {
 
     setValidationMsg(msg);
     setIsFormValid(isValid);
-    
+
     // Jika valid, tombol diam di tengah (reset posisi)
     if (isValid) setBtnPos({ x: 0, y: 0 });
-
   }, [formData, mode]);
 
   // Fungsi Tombol Kabur
   const moveButton = () => {
     if (!isFormValid && !loading) {
-      // Gerak acak Kiri/Kanan
-      const x = Math.random() < 0.5 ? -Math.random() * 150 : Math.random() * 150;
-      // Gerak acak Atas/Bawah
+      const x =
+        Math.random() < 0.5 ? -Math.random() * 150 : Math.random() * 150;
       const y = Math.random() < 0.5 ? -Math.random() * 80 : Math.random() * 80;
-      
+
       setBtnPos({ x, y });
-      
-      // Munculkan pesan error kenapa tombolnya kabur
-      toast.error(validationMsg || "Lengkapi form dulu!", { 
+
+      toast.error(validationMsg || "Lengkapi form dulu!", {
         id: "validation-toast",
         duration: 2000,
-        icon: '🚫',
-        style: { borderRadius: '10px', background: '#333', color: '#fff' }
+        icon: "🚫",
+        style: { borderRadius: "10px", background: "#333", color: "#fff" },
       });
     }
   };
@@ -133,20 +130,22 @@ const AuthPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isFormValid) return; 
+    if (!isFormValid) return;
 
     setLoading(true);
 
     try {
       if (mode === "login") {
-        const res = await axios.post("http://localhost:3000/api/auth/login", {
+        // PERBAIKAN: Pakai API_URL
+        const res = await axios.post(`${API_URL}/auth/login`, {
           email: formData.email,
           password: formData.password,
         });
         login(res.data.user, res.data.token);
         toast.success("Login Berhasil! 🚀");
       } else if (mode === "register") {
-        await axios.post("http://localhost:3000/api/auth/register", {
+        // PERBAIKAN: Pakai API_URL
+        await axios.post(`${API_URL}/auth/register`, {
           username: formData.username,
           email: formData.email,
           password: formData.password,
@@ -154,13 +153,15 @@ const AuthPage = () => {
         toast.success("Registrasi Sukses! Silakan Login.");
         setMode("login");
       } else if (mode === "forgot_request") {
-        await axios.post("http://localhost:3000/api/auth/forgot-password", {
+        // PERBAIKAN: Pakai API_URL
+        await axios.post(`${API_URL}/auth/forgot-password`, {
           email: formData.email,
         });
         toast.success("OTP dikirim ke Inbox/Spam!");
         setMode("forgot_verify");
       } else if (mode === "forgot_verify") {
-        await axios.post("http://localhost:3000/api/auth/reset-password", {
+        // PERBAIKAN: Pakai API_URL
+        await axios.post(`${API_URL}/auth/reset-password`, {
           email: formData.email,
           otp: formData.otp,
           newPassword: formData.password,
@@ -170,40 +171,47 @@ const AuthPage = () => {
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.message || "Gagal memproses permintaan");
+      toast.error(
+        error.response?.data?.message || "Gagal memproses permintaan",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const getHeader = () => {
-    if (mode === "login") return { title: "Welcome Back", subtitle: "Login dengan akun Gmail Anda." };
-    if (mode === "register") return { title: "Create Account", subtitle: "Daftar dengan email Gmail aktif." };
-    if (mode === "forgot_request") return { title: "Reset Password", subtitle: "Masukkan email terdaftar." };
-    if (mode === "forgot_verify") return { title: "Verifikasi OTP", subtitle: "Cek kode di email Anda." };
+    if (mode === "login")
+      return {
+        title: "Welcome Back",
+        subtitle: "Login dengan akun Gmail Anda.",
+      };
+    if (mode === "register")
+      return {
+        title: "Create Account",
+        subtitle: "Daftar dengan email Gmail aktif.",
+      };
+    if (mode === "forgot_request")
+      return { title: "Reset Password", subtitle: "Masukkan email terdaftar." };
+    if (mode === "forgot_verify")
+      return { title: "Verifikasi OTP", subtitle: "Cek kode di email Anda." };
   };
 
   const headerInfo = getHeader();
 
-  // Reset form saat ganti mode
   const switchMode = (newMode) => {
     setMode(newMode);
-    setBtnPos({x:0, y:0});
+    setBtnPos({ x: 0, y: 0 });
     setFormData({ username: "", email: "", password: "", otp: "" });
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#020617] transition-colors duration-500 p-4 relative overflow-hidden">
-      
-      {/* Background Decoration */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-brand-500/10 rounded-full blur-[100px]"></div>
         <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-blue-500/10 rounded-full blur-[100px]"></div>
       </div>
 
       <div className="bg-white dark:bg-[#0F172A] p-8 md:p-10 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 dark:shadow-black/50 w-full max-w-md border border-slate-100 dark:border-slate-800 relative z-10 animate-fade-in-up">
-        
-        {/* LOGO */}
         <div className="flex justify-center mb-6">
           <div className="flex items-center gap-3">
             <div className="bg-gradient-to-tr from-brand-600 to-indigo-600 text-white p-3 rounded-2xl shadow-lg shadow-brand-500/30">
@@ -217,18 +225,22 @@ const AuthPage = () => {
           </div>
         </div>
 
-        {/* HEADER TEXT */}
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">{headerInfo.title}</h2>
-          <p className="text-slate-500 dark:text-slate-400 text-sm">{headerInfo.subtitle}</p>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
+            {headerInfo.title}
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 text-sm">
+            {headerInfo.subtitle}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          
-          {/* USERNAME (Register Only) */}
           {mode === "register" && (
             <div className="relative group">
-              <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors" />
+              <User
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors"
+              />
               <input
                 type="text"
                 name="username"
@@ -241,10 +253,12 @@ const AuthPage = () => {
             </div>
           )}
 
-          {/* EMAIL */}
           <div className={mode === "forgot_verify" ? "hidden" : "block"}>
             <div className="relative group">
-              <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors" />
+              <Mail
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors"
+              />
               <input
                 type="email"
                 name="email"
@@ -257,22 +271,25 @@ const AuthPage = () => {
             </div>
           </div>
 
-          {/* PASSWORD */}
           {mode !== "forgot_request" && (
             <div className="space-y-1">
               <div className="relative group">
-                <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors" />
+                <Lock
+                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors"
+                />
                 <input
                   type="password"
                   name="password"
-                  placeholder={mode === "forgot_verify" ? "Password Baru" : "Password"}
+                  placeholder={
+                    mode === "forgot_verify" ? "Password Baru" : "Password"
+                  }
                   onChange={handleChange}
                   value={formData.password}
                   className="w-full pl-11 pr-4 py-3.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500/50 outline-none transition-all font-medium text-sm"
                   required
                 />
               </div>
-              {/* Hint Password: Tampil di Register & Reset Password */}
               {(mode === "register" || mode === "forgot_verify") && (
                 <div className="flex items-center gap-1 pl-2 text-[10px] text-slate-400">
                   <AlertCircle size={10} />
@@ -282,10 +299,12 @@ const AuthPage = () => {
             </div>
           )}
 
-          {/* OTP INPUT */}
           {mode === "forgot_verify" && (
             <div className="relative group">
-              <Key size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-500" />
+              <Key
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-500"
+              />
               <input
                 type="text"
                 name="otp"
@@ -299,22 +318,22 @@ const AuthPage = () => {
             </div>
           )}
 
-          {/* SUBMIT BUTTON (THE DODGING BUTTON) */}
-          <div className="relative h-14 w-full pt-2"> 
+          <div className="relative h-14 w-full pt-2">
             <button
               type="submit"
-              onMouseEnter={moveButton} 
+              onMouseEnter={moveButton}
               style={{
                 transform: `translate(${btnPos.x}px, ${btnPos.y}px)`,
-                transition: "all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)" 
+                transition: "all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
               }}
               disabled={loading}
               className={`w-full py-4 rounded-full font-bold text-white shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2
-                ${loading 
-                  ? "bg-slate-400 cursor-not-allowed" 
-                  : !isFormValid 
-                    ? "bg-red-500 cursor-not-allowed opacity-80 shadow-red-500/20" // Merah = Belum Valid
-                    : "bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 active:scale-95 transition-all"
+                ${
+                  loading
+                    ? "bg-slate-400 cursor-not-allowed"
+                    : !isFormValid
+                      ? "bg-red-500 cursor-not-allowed opacity-80 shadow-red-500/20"
+                      : "bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 active:scale-95 transition-all"
                 }`}
             >
               {loading ? (
@@ -334,7 +353,6 @@ const AuthPage = () => {
           </div>
         </form>
 
-        {/* FOOTER LINKS */}
         <div className="mt-8 text-center space-y-3">
           {mode === "login" ? (
             <>
@@ -367,13 +385,11 @@ const AuthPage = () => {
         </div>
       </div>
 
-      {/* Footer */}
       <div className="absolute bottom-6 text-center w-full pointer-events-none">
         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest opacity-50">
           © 2024 InfluencerMatch DSS
         </p>
       </div>
-
     </div>
   );
 };

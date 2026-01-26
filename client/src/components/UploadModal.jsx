@@ -1,7 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { UploadCloud, FileSpreadsheet, X, Download, FileText, Loader2 } from "lucide-react";
+import {
+  UploadCloud,
+  FileSpreadsheet,
+  X,
+  Download,
+  FileText,
+  Loader2,
+} from "lucide-react";
+// IMPORT API_URL DARI SINI:
+import { API_URL } from "../api";
 
 const UploadModal = ({ isOpen, onClose, onSuccess }) => {
   const [file, setFile] = useState(null);
@@ -42,13 +51,14 @@ const UploadModal = ({ isOpen, onClose, onSuccess }) => {
     formData.append("file", file);
 
     try {
-      await axios.post("http://localhost:3000/api/upload", formData, {
+      // PERBAIKAN: Pakai API_URL
+      await axios.post(`${API_URL}/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      toast.success("Database berhasil diperbarui!", { 
+      toast.success("Database berhasil diperbarui!", {
         id: loadingToast,
-        style: { borderRadius: '10px', background: '#333', color: '#fff' }
+        style: { borderRadius: "10px", background: "#333", color: "#fff" },
       });
       setFile(null);
 
@@ -71,17 +81,20 @@ const UploadModal = ({ isOpen, onClose, onSuccess }) => {
   return (
     <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[80] flex items-center justify-center p-4 animate-fade-in">
       <div className="bg-white dark:bg-darkCard rounded-3xl shadow-2xl max-w-lg w-full p-8 transform transition-all scale-100 border border-slate-200 dark:border-slate-700">
-        
         {/* Header Modal */}
         <div className="flex justify-between items-start mb-6">
           <div className="flex items-center gap-3">
-             <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-2xl text-blue-600 dark:text-blue-400">
-                <UploadCloud size={24} />
-             </div>
-             <div>
-                <h3 className="text-xl font-black text-slate-800 dark:text-white">Upload Dataset</h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Update database influencer via CSV.</p>
-             </div>
+            <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-2xl text-blue-600 dark:text-blue-400">
+              <UploadCloud size={24} />
+            </div>
+            <div>
+              <h3 className="text-xl font-black text-slate-800 dark:text-white">
+                Upload Dataset
+              </h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+                Update database influencer via CSV.
+              </p>
+            </div>
           </div>
           <button
             onClick={onClose}
@@ -110,23 +123,30 @@ const UploadModal = ({ isOpen, onClose, onSuccess }) => {
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             disabled={uploading}
           />
-          <div className={`border-2 border-dashed rounded-2xl p-10 text-center transition-all duration-300
-             ${file 
-               ? "border-green-500 bg-green-50 dark:bg-green-900/10" 
-               : "border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 group-hover:border-brand-400"
+          <div
+            className={`border-2 border-dashed rounded-2xl p-10 text-center transition-all duration-300
+             ${
+               file
+                 ? "border-green-500 bg-green-50 dark:bg-green-900/10"
+                 : "border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 group-hover:border-brand-400"
              }
-          `}>
+          `}
+          >
             <div className="flex flex-col items-center justify-center space-y-3">
-               <div className={`p-4 rounded-full ${file ? 'bg-green-100 text-green-600' : 'bg-white dark:bg-slate-700 text-slate-400 shadow-sm'}`}>
-                  {file ? <FileText size={32} /> : <FileSpreadsheet size={32} />}
-               </div>
-               
-               <div className="space-y-1">
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
-                    {file ? file.name : "Klik atau Drag file CSV ke sini"}
-                  </p>
-                  <p className="text-xs text-slate-400 dark:text-slate-500">Maksimal ukuran 5MB</p>
-               </div>
+              <div
+                className={`p-4 rounded-full ${file ? "bg-green-100 text-green-600" : "bg-white dark:bg-slate-700 text-slate-400 shadow-sm"}`}
+              >
+                {file ? <FileText size={32} /> : <FileSpreadsheet size={32} />}
+              </div>
+
+              <div className="space-y-1">
+                <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
+                  {file ? file.name : "Klik atau Drag file CSV ke sini"}
+                </p>
+                <p className="text-xs text-slate-400 dark:text-slate-500">
+                  Maksimal ukuran 5MB
+                </p>
+              </div>
             </div>
           </div>
         </div>
