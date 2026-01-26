@@ -1,7 +1,9 @@
 import axios from "axios";
 
-// Pastikan port ini sama dengan port Backend server Anda (3000)
-const API_URL = "http://localhost:3000/api";
+// PENYESUAIAN VERCEL:
+// Gunakan relative path "/api" saat production agar mengikuti domain Vercel.
+// Gunakan localhost:3000 hanya saat development.
+const API_URL = import.meta.env.PROD ? "/api" : "http://localhost:3000/api";
 
 export const getRecommendations = async (criteria) => {
   try {
