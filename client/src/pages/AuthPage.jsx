@@ -20,7 +20,6 @@ const AuthPage = () => {
   const { login } = useContext(AuthContext);
 
   // Mode: login | register | forgot_request | forgot_verify
-  // (Mode 'register_verify' DIHAPUS sesuai request)
   const [mode, setMode] = useState("login");
 
   const [formData, setFormData] = useState({
@@ -30,15 +29,6 @@ const AuthPage = () => {
     otp: "",
   });
   const [loading, setLoading] = useState(false);
-<<<<<<< HEAD
-  
-  // --- LOGIKA TOMBOL KABUR ---
-  const [btnPos, setBtnPos] = useState({ x: 0, y: 0 }); 
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [validationMsg, setValidationMsg] = useState("");
-
-  const strongPasswordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/;
-=======
 
   // --- LOGIKA TOMBOL KABUR & VALIDASI ---
   const [btnPos, setBtnPos] = useState({ x: 0, y: 0 });
@@ -48,7 +38,6 @@ const AuthPage = () => {
   // REGEX PASSWORD: Min 1 Huruf, 1 Angka, 1 Simbol
   const strongPasswordRegex =
     /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/;
->>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
 
   // Validasi Real-time
   useEffect(() => {
@@ -62,118 +51,56 @@ const AuthPage = () => {
 
     // --- LOGIC VALIDASI ---
     if (mode === "login") {
-<<<<<<< HEAD
+      // LOGIN: Wajib Gmail, Password cukup diisi
       if (!isFilled(email)) msg = "Email wajib diisi!";
       else if (!isGmail) msg = "Login wajib pakai akun @gmail.com!";
       else if (!isFilled(password)) msg = "Password belum diisi!";
       else isValid = true;
     } 
     else if (mode === "register") {
+      // REGISTER: Wajib Gmail + Password Kuat
       if (!isFilled(username)) msg = "Username wajib diisi!";
       else if (!isFilled(email)) msg = "Email wajib diisi!";
       else if (!isGmail) msg = "Wajib daftar pakai @gmail.com asli!";
       else if (!isFilled(password)) msg = "Password belum diisi!";
       else if (!isStrongPass) msg = "Password lemah! Kombinasi Huruf, Angka & Simbol.";
       else isValid = true;
-    }
-    // Logic Forgot Password (Tetap pakai OTP)
+    } 
     else if (mode === "forgot_request") {
-      if (!isGmail) msg = "Masukkan email valid!";
+      // LUPA PASS: Wajib Gmail
+      if (!isFilled(email)) msg = "Email wajib diisi!";
+      else if (!isGmail) msg = "Masukkan email @gmail.com yang valid!";
       else isValid = true;
     } 
     else if (mode === "forgot_verify") {
-      if (otp.length !== 6) msg = "OTP harus 6 digit!";
+      // RESET PASS: Wajib Gmail + Password Baru Kuat + OTP
+      if (!isGmail) msg = "Email tidak valid!";
+      else if (otp.length !== 6) msg = "OTP harus 6 digit!";
       else if (!isStrongPass) msg = "Password baru kurang kuat!";
       else isValid = true;
-=======
-      // LOGIN: Wajib Gmail, Password cukup diisi
-      if (!isFilled(email)) {
-        msg = "Email wajib diisi!";
-      } else if (!isGmail) {
-        msg = "Login wajib pakai akun @gmail.com!";
-      } else if (!isFilled(password)) {
-        msg = "Password belum diisi!";
-      } else {
-        isValid = true;
-      }
-    } else if (mode === "register") {
-      // REGISTER: Wajib Gmail + Password Kuat
-      if (!isFilled(username)) {
-        msg = "Username wajib diisi!";
-      } else if (!isFilled(email)) {
-        msg = "Email wajib diisi!";
-      } else if (!isGmail) {
-        msg = "Wajib daftar pakai @gmail.com!";
-      } else if (!isFilled(password)) {
-        msg = "Password belum diisi!";
-      } else if (!isStrongPass) {
-        msg = "Password lemah! Harus kombinasi Huruf, Angka & Simbol.";
-      } else {
-        isValid = true;
-      }
-    } else if (mode === "forgot_request") {
-      // LUPA PASS: Wajib Gmail
-      if (!isFilled(email)) {
-        msg = "Email wajib diisi!";
-      } else if (!isGmail) {
-        msg = "Masukkan email @gmail.com yang valid!";
-      } else {
-        isValid = true;
-      }
-    } else if (mode === "forgot_verify") {
-      // RESET PASS: Wajib Gmail + Password Baru Kuat + OTP
-      if (!isGmail) {
-        msg = "Email tidak valid!";
-      } else if (otp.length !== 6) {
-        msg = "OTP harus 6 digit!";
-      } else if (!isStrongPass) {
-        msg = "Password baru harus kombinasi Huruf, Angka & Simbol!";
-      } else {
-        isValid = true;
-      }
->>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
     }
 
     setValidationMsg(msg);
     setIsFormValid(isValid);
-<<<<<<< HEAD
-    
-    // Reset posisi tombol jika sudah valid
-=======
 
-    // Jika valid, tombol diam di tengah (reset posisi)
->>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
+    // Reset posisi tombol jika sudah valid
     if (isValid) setBtnPos({ x: 0, y: 0 });
   }, [formData, mode]);
 
   // --- FUNGSI KABUR (SUPPORT MOBILE & DESKTOP) ---
   const moveButton = () => {
     if (!isFormValid && !loading) {
-<<<<<<< HEAD
       // Jarak loncat (sedikit dikurangi biar gak keluar layar HP)
       const x = Math.random() < 0.5 ? -Math.random() * 100 : Math.random() * 100;
       const y = Math.random() < 0.5 ? -Math.random() * 60 : Math.random() * 60;
-      
-      setBtnPos({ x, y });
-      
-      toast.error(validationMsg || "Lengkapi form dulu!", { 
-        id: "validation-toast", 
-        duration: 1500, 
-        icon: '🚫',
-        style: { borderRadius: '10px', background: '#333', color: '#fff', fontSize: '12px' }
-=======
-      const x =
-        Math.random() < 0.5 ? -Math.random() * 150 : Math.random() * 150;
-      const y = Math.random() < 0.5 ? -Math.random() * 80 : Math.random() * 80;
 
       setBtnPos({ x, y });
 
       toast.error(validationMsg || "Lengkapi form dulu!", {
         id: "validation-toast",
-        duration: 2000,
+        duration: 1500,
         icon: "🚫",
-        style: { borderRadius: "10px", background: "#333", color: "#fff" },
->>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
+        style: { borderRadius: "10px", background: "#333", color: "#fff", fontSize: '12px' },
       });
     }
   };
@@ -190,49 +117,35 @@ const AuthPage = () => {
     try {
       // 1. LOGIN
       if (mode === "login") {
-        // PERBAIKAN: Pakai API_URL
         const res = await axios.post(`${API_URL}/auth/login`, {
           email: formData.email,
           password: formData.password,
         });
         login(res.data.user, res.data.token);
         toast.success("Login Berhasil! 🚀");
-<<<<<<< HEAD
       } 
-      // 2. REGISTER (KEMBALI KE METODE TANPA VERIFIKASI EMAIL)
+      // 2. REGISTER
       else if (mode === "register") {
-        await axios.post("http://localhost:3000/api/auth/register", {
-=======
-      } else if (mode === "register") {
-        // PERBAIKAN: Pakai API_URL
         await axios.post(`${API_URL}/auth/register`, {
->>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
           username: formData.username,
           email: formData.email,
           password: formData.password,
         });
-<<<<<<< HEAD
         toast.success("Registrasi Berhasil! Silakan Login.", { icon: '🎉' });
-        // Langsung lempar ke login, ga perlu verify email dulu
-        setMode("login"); 
+        // Langsung lempar ke login
+        setMode("login");
         setFormData({ ...formData, password: "" }); // Clear password biar aman
       } 
-      // 3. FORGOT PASSWORD FLOW (Tetap butuh OTP untuk keamanan reset)
+      // 3. FORGOT PASSWORD REQUEST
       else if (mode === "forgot_request") {
-        await axios.post("http://localhost:3000/api/auth/forgot-password", {
-=======
-        toast.success("Registrasi Sukses! Silakan Login.");
-        setMode("login");
-      } else if (mode === "forgot_request") {
-        // PERBAIKAN: Pakai API_URL
         await axios.post(`${API_URL}/auth/forgot-password`, {
->>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
           email: formData.email,
         });
         toast.success("OTP dikirim ke Inbox/Spam!");
         setMode("forgot_verify");
-      } else if (mode === "forgot_verify") {
-        // PERBAIKAN: Pakai API_URL
+      } 
+      // 4. FORGOT PASSWORD VERIFY
+      else if (mode === "forgot_verify") {
         await axios.post(`${API_URL}/auth/reset-password`, {
           email: formData.email,
           otp: formData.otp,
@@ -252,12 +165,6 @@ const AuthPage = () => {
   };
 
   const getHeader = () => {
-<<<<<<< HEAD
-    if (mode === "login") return { title: "Welcome Back", subtitle: "Login dengan akun Gmail Anda." };
-    if (mode === "register") return { title: "Create Account", subtitle: "Daftar Akun Baru." };
-    if (mode === "forgot_request") return { title: "Reset Password", subtitle: "Kami akan kirim OTP ke email." };
-    if (mode === "forgot_verify") return { title: "Password Baru", subtitle: "Masukkan OTP & Password baru." };
-=======
     if (mode === "login")
       return {
         title: "Welcome Back",
@@ -269,10 +176,9 @@ const AuthPage = () => {
         subtitle: "Daftar dengan email Gmail aktif.",
       };
     if (mode === "forgot_request")
-      return { title: "Reset Password", subtitle: "Masukkan email terdaftar." };
+      return { title: "Reset Password", subtitle: "Kami akan kirim OTP ke email." };
     if (mode === "forgot_verify")
-      return { title: "Verifikasi OTP", subtitle: "Cek kode di email Anda." };
->>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
+      return { title: "Password Baru", subtitle: "Masukkan OTP & Password baru." };
   };
 
   const headerInfo = getHeader();
@@ -305,17 +211,12 @@ const AuthPage = () => {
         </div>
 
         <div className="text-center mb-6">
-<<<<<<< HEAD
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">{headerInfo.title}</h2>
-          <p className="text-slate-500 dark:text-slate-400 text-sm truncate px-4">{headerInfo.subtitle}</p>
-=======
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
             {headerInfo.title}
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 text-sm">
+          <p className="text-slate-500 dark:text-slate-400 text-sm truncate px-4">
             {headerInfo.subtitle}
           </p>
->>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -337,12 +238,8 @@ const AuthPage = () => {
             </div>
           )}
 
-<<<<<<< HEAD
           {/* EMAIL */}
           {mode !== "forgot_verify" && (
-=======
-          <div className={mode === "forgot_verify" ? "hidden" : "block"}>
->>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
             <div className="relative group">
               <Mail
                 size={18}
@@ -360,12 +257,8 @@ const AuthPage = () => {
             </div>
           )}
 
-<<<<<<< HEAD
           {/* PASSWORD */}
           {(mode === "login" || mode === "register" || mode === "forgot_verify") && (
-=======
-          {mode !== "forgot_request" && (
->>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
             <div className="space-y-1">
               <div className="relative group">
                 <Lock
@@ -384,10 +277,7 @@ const AuthPage = () => {
                   required
                 />
               </div>
-<<<<<<< HEAD
               {/* Hint Password */}
-=======
->>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
               {(mode === "register" || mode === "forgot_verify") && (
                 <div className="flex items-center gap-1 pl-2 text-[10px] text-slate-400">
                   <AlertCircle size={10} />
@@ -397,19 +287,13 @@ const AuthPage = () => {
             </div>
           )}
 
-<<<<<<< HEAD
           {/* OTP INPUT (Hanya Forgot Verify) */}
           {mode === "forgot_verify" && (
             <div className="relative group animate-in slide-in-from-bottom-2">
-              <Key size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-500" />
-=======
-          {mode === "forgot_verify" && (
-            <div className="relative group">
               <Key
                 size={18}
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-500"
               />
->>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
               <input
                 type="text"
                 name="otp"
@@ -423,43 +307,26 @@ const AuthPage = () => {
             </div>
           )}
 
-<<<<<<< HEAD
           {/* SUBMIT BUTTON */}
-          <div className="relative h-14 w-full pt-2"> 
-            <button
-              type="submit"
-              // Desktop: Pakai onMouseEnter
-              onMouseEnter={moveButton} 
-              // Mobile: Pakai onTouchStart agar pas disentuh langsung kabur
-              onTouchStart={moveButton} 
-              
-=======
           <div className="relative h-14 w-full pt-2">
             <button
               type="submit"
+              // Desktop: Pakai onMouseEnter
               onMouseEnter={moveButton}
->>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
+              // Mobile: Pakai onTouchStart agar pas disentuh langsung kabur
+              onTouchStart={moveButton}
               style={{
                 transform: `translate(${btnPos.x}px, ${btnPos.y}px)`,
                 transition: "all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
               }}
               disabled={loading}
-<<<<<<< HEAD
               className={`w-full py-4 rounded-full font-bold text-white shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2 select-none
-                ${loading 
-                  ? "bg-slate-400 cursor-not-allowed" 
-                  : !isFormValid 
-                    ? "bg-red-500 cursor-not-allowed opacity-80" 
-                    : "bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 active:scale-95 transition-all"
-=======
-              className={`w-full py-4 rounded-full font-bold text-white shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2
                 ${
                   loading
                     ? "bg-slate-400 cursor-not-allowed"
                     : !isFormValid
                       ? "bg-red-500 cursor-not-allowed opacity-80 shadow-red-500/20"
                       : "bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 active:scale-95 transition-all"
->>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
                 }`}
             >
               {loading ? (
