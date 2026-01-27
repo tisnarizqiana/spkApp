@@ -55,6 +55,12 @@ app.get("/api/test-db", async (req, res) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
-  console.log(`🚀 Server berjalan di http://localhost:${PORT}`);
-});
+// PENYESUAIAN VERCEL: Jalankan app.listen hanya jika BUKAN production (Local Development)
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server berjalan di http://localhost:${PORT}`);
+  });
+}
+
+// PENYESUAIAN VERCEL: Export app agar bisa dijalankan sebagai Serverless Function
+module.exports = app;

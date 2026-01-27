@@ -2,16 +2,18 @@ import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { AuthContext } from "../context/AuthContext";
-import { 
-  LayoutDashboard, 
-  Mail, 
-  Lock, 
-  User, 
-  Key, 
-  ArrowRight, 
+// IMPORT API_URL DARI SINI:
+import { API_URL } from "../api";
+import {
+  LayoutDashboard,
+  Mail,
+  Lock,
+  User,
+  Key,
+  ArrowRight,
   Loader2,
   ChevronLeft,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 
 const AuthPage = () => {
@@ -28,6 +30,7 @@ const AuthPage = () => {
     otp: "",
   });
   const [loading, setLoading] = useState(false);
+<<<<<<< HEAD
   
   // --- LOGIKA TOMBOL KABUR ---
   const [btnPos, setBtnPos] = useState({ x: 0, y: 0 }); 
@@ -35,6 +38,17 @@ const AuthPage = () => {
   const [validationMsg, setValidationMsg] = useState("");
 
   const strongPasswordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/;
+=======
+
+  // --- LOGIKA TOMBOL KABUR & VALIDASI ---
+  const [btnPos, setBtnPos] = useState({ x: 0, y: 0 });
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [validationMsg, setValidationMsg] = useState("");
+
+  // REGEX PASSWORD: Min 1 Huruf, 1 Angka, 1 Simbol
+  const strongPasswordRegex =
+    /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/;
+>>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
 
   // Validasi Real-time
   useEffect(() => {
@@ -48,6 +62,7 @@ const AuthPage = () => {
 
     // --- LOGIC VALIDASI ---
     if (mode === "login") {
+<<<<<<< HEAD
       if (!isFilled(email)) msg = "Email wajib diisi!";
       else if (!isGmail) msg = "Login wajib pakai akun @gmail.com!";
       else if (!isFilled(password)) msg = "Password belum diisi!";
@@ -70,19 +85,71 @@ const AuthPage = () => {
       if (otp.length !== 6) msg = "OTP harus 6 digit!";
       else if (!isStrongPass) msg = "Password baru kurang kuat!";
       else isValid = true;
+=======
+      // LOGIN: Wajib Gmail, Password cukup diisi
+      if (!isFilled(email)) {
+        msg = "Email wajib diisi!";
+      } else if (!isGmail) {
+        msg = "Login wajib pakai akun @gmail.com!";
+      } else if (!isFilled(password)) {
+        msg = "Password belum diisi!";
+      } else {
+        isValid = true;
+      }
+    } else if (mode === "register") {
+      // REGISTER: Wajib Gmail + Password Kuat
+      if (!isFilled(username)) {
+        msg = "Username wajib diisi!";
+      } else if (!isFilled(email)) {
+        msg = "Email wajib diisi!";
+      } else if (!isGmail) {
+        msg = "Wajib daftar pakai @gmail.com!";
+      } else if (!isFilled(password)) {
+        msg = "Password belum diisi!";
+      } else if (!isStrongPass) {
+        msg = "Password lemah! Harus kombinasi Huruf, Angka & Simbol.";
+      } else {
+        isValid = true;
+      }
+    } else if (mode === "forgot_request") {
+      // LUPA PASS: Wajib Gmail
+      if (!isFilled(email)) {
+        msg = "Email wajib diisi!";
+      } else if (!isGmail) {
+        msg = "Masukkan email @gmail.com yang valid!";
+      } else {
+        isValid = true;
+      }
+    } else if (mode === "forgot_verify") {
+      // RESET PASS: Wajib Gmail + Password Baru Kuat + OTP
+      if (!isGmail) {
+        msg = "Email tidak valid!";
+      } else if (otp.length !== 6) {
+        msg = "OTP harus 6 digit!";
+      } else if (!isStrongPass) {
+        msg = "Password baru harus kombinasi Huruf, Angka & Simbol!";
+      } else {
+        isValid = true;
+      }
+>>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
     }
 
     setValidationMsg(msg);
     setIsFormValid(isValid);
+<<<<<<< HEAD
     
     // Reset posisi tombol jika sudah valid
-    if (isValid) setBtnPos({ x: 0, y: 0 });
+=======
 
+    // Jika valid, tombol diam di tengah (reset posisi)
+>>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
+    if (isValid) setBtnPos({ x: 0, y: 0 });
   }, [formData, mode]);
 
   // --- FUNGSI KABUR (SUPPORT MOBILE & DESKTOP) ---
   const moveButton = () => {
     if (!isFormValid && !loading) {
+<<<<<<< HEAD
       // Jarak loncat (sedikit dikurangi biar gak keluar layar HP)
       const x = Math.random() < 0.5 ? -Math.random() * 100 : Math.random() * 100;
       const y = Math.random() < 0.5 ? -Math.random() * 60 : Math.random() * 60;
@@ -94,6 +161,19 @@ const AuthPage = () => {
         duration: 1500, 
         icon: '🚫',
         style: { borderRadius: '10px', background: '#333', color: '#fff', fontSize: '12px' }
+=======
+      const x =
+        Math.random() < 0.5 ? -Math.random() * 150 : Math.random() * 150;
+      const y = Math.random() < 0.5 ? -Math.random() * 80 : Math.random() * 80;
+
+      setBtnPos({ x, y });
+
+      toast.error(validationMsg || "Lengkapi form dulu!", {
+        id: "validation-toast",
+        duration: 2000,
+        icon: "🚫",
+        style: { borderRadius: "10px", background: "#333", color: "#fff" },
+>>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
       });
     }
   };
@@ -103,27 +183,35 @@ const AuthPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isFormValid) return; 
+    if (!isFormValid) return;
 
     setLoading(true);
 
     try {
       // 1. LOGIN
       if (mode === "login") {
-        const res = await axios.post("http://localhost:3000/api/auth/login", {
+        // PERBAIKAN: Pakai API_URL
+        const res = await axios.post(`${API_URL}/auth/login`, {
           email: formData.email,
           password: formData.password,
         });
         login(res.data.user, res.data.token);
         toast.success("Login Berhasil! 🚀");
+<<<<<<< HEAD
       } 
       // 2. REGISTER (KEMBALI KE METODE TANPA VERIFIKASI EMAIL)
       else if (mode === "register") {
         await axios.post("http://localhost:3000/api/auth/register", {
+=======
+      } else if (mode === "register") {
+        // PERBAIKAN: Pakai API_URL
+        await axios.post(`${API_URL}/auth/register`, {
+>>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
           username: formData.username,
           email: formData.email,
           password: formData.password,
         });
+<<<<<<< HEAD
         toast.success("Registrasi Berhasil! Silakan Login.", { icon: '🎉' });
         // Langsung lempar ke login, ga perlu verify email dulu
         setMode("login"); 
@@ -132,12 +220,20 @@ const AuthPage = () => {
       // 3. FORGOT PASSWORD FLOW (Tetap butuh OTP untuk keamanan reset)
       else if (mode === "forgot_request") {
         await axios.post("http://localhost:3000/api/auth/forgot-password", {
+=======
+        toast.success("Registrasi Sukses! Silakan Login.");
+        setMode("login");
+      } else if (mode === "forgot_request") {
+        // PERBAIKAN: Pakai API_URL
+        await axios.post(`${API_URL}/auth/forgot-password`, {
+>>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
           email: formData.email,
         });
         toast.success("OTP dikirim ke Inbox/Spam!");
         setMode("forgot_verify");
       } else if (mode === "forgot_verify") {
-        await axios.post("http://localhost:3000/api/auth/reset-password", {
+        // PERBAIKAN: Pakai API_URL
+        await axios.post(`${API_URL}/auth/reset-password`, {
           email: formData.email,
           otp: formData.otp,
           newPassword: formData.password,
@@ -147,39 +243,54 @@ const AuthPage = () => {
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.message || "Gagal memproses permintaan");
+      toast.error(
+        error.response?.data?.message || "Gagal memproses permintaan",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const getHeader = () => {
+<<<<<<< HEAD
     if (mode === "login") return { title: "Welcome Back", subtitle: "Login dengan akun Gmail Anda." };
     if (mode === "register") return { title: "Create Account", subtitle: "Daftar Akun Baru." };
     if (mode === "forgot_request") return { title: "Reset Password", subtitle: "Kami akan kirim OTP ke email." };
     if (mode === "forgot_verify") return { title: "Password Baru", subtitle: "Masukkan OTP & Password baru." };
+=======
+    if (mode === "login")
+      return {
+        title: "Welcome Back",
+        subtitle: "Login dengan akun Gmail Anda.",
+      };
+    if (mode === "register")
+      return {
+        title: "Create Account",
+        subtitle: "Daftar dengan email Gmail aktif.",
+      };
+    if (mode === "forgot_request")
+      return { title: "Reset Password", subtitle: "Masukkan email terdaftar." };
+    if (mode === "forgot_verify")
+      return { title: "Verifikasi OTP", subtitle: "Cek kode di email Anda." };
+>>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
   };
 
   const headerInfo = getHeader();
 
   const switchMode = (newMode) => {
     setMode(newMode);
-    setBtnPos({x:0, y:0});
+    setBtnPos({ x: 0, y: 0 });
     setFormData({ username: "", email: "", password: "", otp: "" });
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#020617] transition-colors duration-500 p-4 relative overflow-hidden">
-      
-      {/* Background Decoration */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-brand-500/10 rounded-full blur-[100px]"></div>
         <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-blue-500/10 rounded-full blur-[100px]"></div>
       </div>
 
       <div className="bg-white dark:bg-[#0F172A] p-8 md:p-10 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 dark:shadow-black/50 w-full max-w-md border border-slate-100 dark:border-slate-800 relative z-10 animate-fade-in-up">
-        
-        {/* LOGO */}
         <div className="flex justify-center mb-6">
           <div className="flex items-center gap-3">
             <div className="bg-gradient-to-tr from-brand-600 to-indigo-600 text-white p-3 rounded-2xl shadow-lg shadow-brand-500/30">
@@ -193,18 +304,27 @@ const AuthPage = () => {
           </div>
         </div>
 
-        {/* HEADER TEXT */}
         <div className="text-center mb-6">
+<<<<<<< HEAD
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">{headerInfo.title}</h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm truncate px-4">{headerInfo.subtitle}</p>
+=======
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
+            {headerInfo.title}
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 text-sm">
+            {headerInfo.subtitle}
+          </p>
+>>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          
-          {/* USERNAME (Register Only) */}
           {mode === "register" && (
             <div className="relative group">
-              <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors" />
+              <User
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors"
+              />
               <input
                 type="text"
                 name="username"
@@ -217,10 +337,17 @@ const AuthPage = () => {
             </div>
           )}
 
+<<<<<<< HEAD
           {/* EMAIL */}
           {mode !== "forgot_verify" && (
+=======
+          <div className={mode === "forgot_verify" ? "hidden" : "block"}>
+>>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
             <div className="relative group">
-              <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors" />
+              <Mail
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors"
+              />
               <input
                 type="email"
                 name="email"
@@ -233,22 +360,34 @@ const AuthPage = () => {
             </div>
           )}
 
+<<<<<<< HEAD
           {/* PASSWORD */}
           {(mode === "login" || mode === "register" || mode === "forgot_verify") && (
+=======
+          {mode !== "forgot_request" && (
+>>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
             <div className="space-y-1">
               <div className="relative group">
-                <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors" />
+                <Lock
+                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors"
+                />
                 <input
                   type="password"
                   name="password"
-                  placeholder={mode === "forgot_verify" ? "Password Baru" : "Password"}
+                  placeholder={
+                    mode === "forgot_verify" ? "Password Baru" : "Password"
+                  }
                   onChange={handleChange}
                   value={formData.password}
                   className="w-full pl-11 pr-4 py-3.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500/50 outline-none transition-all font-medium text-sm"
                   required
                 />
               </div>
+<<<<<<< HEAD
               {/* Hint Password */}
+=======
+>>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
               {(mode === "register" || mode === "forgot_verify") && (
                 <div className="flex items-center gap-1 pl-2 text-[10px] text-slate-400">
                   <AlertCircle size={10} />
@@ -258,10 +397,19 @@ const AuthPage = () => {
             </div>
           )}
 
+<<<<<<< HEAD
           {/* OTP INPUT (Hanya Forgot Verify) */}
           {mode === "forgot_verify" && (
             <div className="relative group animate-in slide-in-from-bottom-2">
               <Key size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-500" />
+=======
+          {mode === "forgot_verify" && (
+            <div className="relative group">
+              <Key
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-500"
+              />
+>>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
               <input
                 type="text"
                 name="otp"
@@ -275,6 +423,7 @@ const AuthPage = () => {
             </div>
           )}
 
+<<<<<<< HEAD
           {/* SUBMIT BUTTON */}
           <div className="relative h-14 w-full pt-2"> 
             <button
@@ -284,17 +433,33 @@ const AuthPage = () => {
               // Mobile: Pakai onTouchStart agar pas disentuh langsung kabur
               onTouchStart={moveButton} 
               
+=======
+          <div className="relative h-14 w-full pt-2">
+            <button
+              type="submit"
+              onMouseEnter={moveButton}
+>>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
               style={{
                 transform: `translate(${btnPos.x}px, ${btnPos.y}px)`,
-                transition: "all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)" 
+                transition: "all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
               }}
               disabled={loading}
+<<<<<<< HEAD
               className={`w-full py-4 rounded-full font-bold text-white shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2 select-none
                 ${loading 
                   ? "bg-slate-400 cursor-not-allowed" 
                   : !isFormValid 
                     ? "bg-red-500 cursor-not-allowed opacity-80" 
                     : "bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 active:scale-95 transition-all"
+=======
+              className={`w-full py-4 rounded-full font-bold text-white shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2
+                ${
+                  loading
+                    ? "bg-slate-400 cursor-not-allowed"
+                    : !isFormValid
+                      ? "bg-red-500 cursor-not-allowed opacity-80 shadow-red-500/20"
+                      : "bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 active:scale-95 transition-all"
+>>>>>>> 5ea9244e4b61267d7a54738066c02d8260ddb28e
                 }`}
             >
               {loading ? (
@@ -314,7 +479,6 @@ const AuthPage = () => {
           </div>
         </form>
 
-        {/* FOOTER LINKS */}
         <div className="mt-8 text-center space-y-3">
           {mode === "login" ? (
             <>
@@ -352,7 +516,6 @@ const AuthPage = () => {
           © 2026 InfluencerMatch DSS
         </p>
       </div>
-
     </div>
   );
 };
